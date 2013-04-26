@@ -24,6 +24,7 @@ from horizon.dashboards.nova import dashboard
 class ImagesAndSnapshots(horizon.Panel):
     name = _("Images & Snapshots")
     slug = 'images_and_snapshots'
+    permissions = ('openstack.roles.admin',)
 
 
 dashboard.Nova.register(ImagesAndSnapshots)

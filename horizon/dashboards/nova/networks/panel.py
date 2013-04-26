@@ -23,6 +23,7 @@ from horizon.dashboards.nova import dashboard
 class Networks(horizon.Panel):
     name = _("Networks")
     slug = 'networks'
-    permissions = ('openstack.services.network',)
+    #permissions = ('openstack.services.network',)
+    permissions = ('openstack.roles.admin',)
 
 dashboard.Nova.register(Networks)

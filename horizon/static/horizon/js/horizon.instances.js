@@ -41,6 +41,14 @@ horizon.addInitFunction(function () {
 
   /* Launch instance workflow */
 
+  $(document).on('change', '.workflow #id_volume_snapshot_id', function () {
+    var volumn_name = $(this).find('option:selected').text().replace(/ .*/,'');
+    console.log(volumn_name);
+    $('#id_image_id option')
+        .filter(function(index) {return $(this).text() == volumn_name;})
+        .attr('selected', true);
+  });
+
   // Handle field toggles for the Launch Instance source type field
   function update_launch_source_displayed_fields (field) {
     var $this = $(field),

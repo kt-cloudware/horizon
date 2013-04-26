@@ -128,6 +128,14 @@ class AttachmentColumn(tables.Column):
             instance = get_attachment_name(request, attachment)
             vals = {"instance": instance,
                     "dev": attachment["device"]}
+            """
+            if attachment.has_key("device"):
+                vals = {"instance": instance,
+                        "dev": attachment["device"]}
+            else:
+                vals = {"instance": instance,
+                        "dev": "sunny"}
+            """
             attachments.append(link % vals)
         return safestring.mark_safe(", ".join(attachments))
 
