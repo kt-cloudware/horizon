@@ -24,6 +24,7 @@ from openstack_dashboard.dashboards.project import dashboard
 class Networks(horizon.Panel):
     name = _("Networks")
     slug = 'networks'
-    permissions = ('openstack.services.network',)
+    #permissions = ('openstack.services.network',)
+    permissions = ('openstack.roles.admin',)
 
 dashboard.Project.register(Networks)

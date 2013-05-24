@@ -66,16 +66,16 @@ class SelectProjectUser(workflows.Step):
 
 class VolumeOptionsAction(workflows.Action):
     VOLUME_CHOICES = (
-        ('', _("Don't boot from a volume.")),
-        ("volume_id", _("Boot from volume.")),
+        # ('', _("Don't boot from a volume.")),
+        #( "volume_id", _("Boot from volume.")),
         ("volume_snapshot_id", _("Boot from volume snapshot "
-                                 "(creates a new volume).")),
+                                 "(creates a new volume)."),),
     )
     # Boot from volume options
     volume_type = forms.ChoiceField(label=_("Volume Options"),
                                     choices=VOLUME_CHOICES,
                                     required=False)
-    volume_id = forms.ChoiceField(label=_("Volume"), required=False)
+    #volume_id = forms.ChoiceField(label=_("Volume"), required=False)
     volume_snapshot_id = forms.ChoiceField(label=_("Volume Snapshot"),
                                            required=False)
     device_name = forms.CharField(label=_("Device Name"),
@@ -167,13 +167,20 @@ class VolumeOptions(workflows.Step):
 
 
 class SetInstanceDetailsAction(workflows.Action):
+    VOLUME_CHOICES = (
+        ("volume_snapshot_id", _("Boot from volume snapshot "
+                                 "(creates a new volume)."),),
+    )
+
+    #volume_id = forms.ChoiceField(label=_("Volume"), required=False)
+    volume_snapshot_id = forms.ChoiceField(label=_("Volume Snapshot"),
+                                           required=False)
+
+
     SOURCE_TYPE_CHOICES = (
         ("image_id", _("Image")),
         ("instance_snapshot_id", _("Snapshot")),
     )
-    source_type = forms.ChoiceField(label=_("Instance Source"),
-                                    choices=SOURCE_TYPE_CHOICES)
-    image_id = forms.ChoiceField(label=_("Image"), required=False)
     instance_snapshot_id = forms.ChoiceField(label=_("Instance Snapshot"),
                                              required=False)
     name = forms.CharField(max_length=80, label=_("Instance Name"))
@@ -184,6 +191,27 @@ class SetInstanceDetailsAction(workflows.Action):
                                initial=1,
                                help_text=_("Number of instances to launch."))
 
+    source_type = forms.ChoiceField(label=_("Instance Source", attrs={'class':'hidden'}),
+                                    choices=SOURCE_TYPE_CHOICES,
+                                    widget=forms.Select(attrs={'class':'hidden'}))
+    image_id = forms.ChoiceField(label=_("Image", attrs={'class':'hidden'}), required=False,widget=forms.Select(attrs={'class':'hidden'}))
+    # Boot from volume options
+    volume_type = forms.ChoiceField(label=_("Volume Options", attr={'class':'hidden'}),
+                                    choices=VOLUME_CHOICES,
+                                    required=False,
+                                    widget=forms.Select(attrs={'class':'hidden'}))
+    device_name = forms.CharField(label=_("Device Name", attrs={'class':'hidden'}),
+                                  required=False,
+                                  initial="vda",
+                                  help_text=_("Volume mount point (e.g. 'vda' "
+                                              "mounts at '/dev/vda')."),
+                                  widget=forms.Select(attrs={'class':'hidden'}))
+    delete_on_terminate = forms.BooleanField(label=_("Delete on Terminate", attr={'class':'hidden'}),
+                                             initial=True,
+                                             required=False,
+                                             help_text=_("Delete volume on "
+                                                         "instance terminate"),
+                                             widget=forms.CheckboxInput(attrs={'class':'hidden'}))
     class Meta:
         name = _("Details")
         help_text_template = ("project/instances/"
@@ -215,6 +243,13 @@ class SetInstanceDetailsAction(workflows.Action):
             msg = _('Launching multiple instances is only supported for '
                     'images and instance snapshots.')
             raise forms.ValidationError(msg)
+
+        # for volume
+        volume_opt = cleaned_data.get('volume_type', None)
+
+        if volume_opt and not cleaned_data[volume_opt]:
+            raise forms.ValidationError(_('Please choose a volume, or select '
+                                          '%s.') % self.VOLUME_CHOICES[0][1])
 
         return cleaned_data
 
@@ -308,10 +343,47 @@ class SetInstanceDetailsAction(workflows.Action):
                               _("Unable to retrieve quota information."))
         return super(SetInstanceDetailsAction, self).get_help_text(extra)
 
+    # for volume
+    def _get_volume_display_name(self, volume):
+        if hasattr(volume, "volume_id"):
+            vol_type = "snap"
+            visible_label = _("Snapshot")
+        else:
+            vol_type = "vol"
+            visible_label = _("Volume")
+        return (("%s:%s" % (volume.id, vol_type)),
+                ("%s - %s GB (%s)" % (volume.display_name,
+                                     volume.size,
+                                     visible_label)))
+
+    def populate_volume_snapshot_id_choices(self, request, context):
+        volume_options = [("", _("Select Volume Snapshot"))]
+        try:
+            #snapshots = api.nova.volume_snapshot_list(self.request)
+            snapshots = api.cinder.volume_snapshot_list(self.request)
+            snapshots = [s for s in snapshots
+                         if s.status == api.VOLUME_STATE_AVAILABLE]
+            volume_options.extend([self._get_volume_display_name(snap)
+                                   for snap in snapshots])
+        except:
+            exceptions.handle(self.request,
+                              _('Unable to retrieve list of volume '
+                                'snapshots.'))
+
+        return volume_options
+
 
 class SetInstanceDetails(workflows.Step):
     action_class = SetInstanceDetailsAction
-    contributes = ("source_type", "source_id", "name", "count", "flavor")
+    contributes = ("source_type",
+                   "source_id",
+                   "name",
+                   "count",
+                   "flavor",
+                   "volume_type",
+                   "volume_id",
+                   "device_name",  # Can be None for an image.
+                   "delete_on_terminate")
 
     def prepare_action_context(self, request, context):
         if 'source_type' in context and 'source_id' in context:
@@ -329,6 +401,17 @@ class SetInstanceDetails(workflows.Step):
         if "source_type" in data:
             context["source_id"] = data.get(data['source_type'], None)
 
+        # Translate form input to context for volume values.
+        if "volume_type" in data and data["volume_type"]:
+            context['volume_id'] = data.get(data['volume_type'], None)
+
+        if not context.get("volume_type", ""):
+            context['volume_type'] = self.action.VOLUME_CHOICES[0][0]
+            context['volume_id'] = None
+            context['device_name'] = None
+            context['delete_on_terminate'] = None
+
+        context['device_name'] = "vda"
         return context
 
 
@@ -470,8 +553,8 @@ class LaunchInstance(workflows.Workflow):
     default_steps = (SelectProjectUser,
                      SetInstanceDetails,
                      SetAccessControls,
-                     SetNetwork,
-                     VolumeOptions,
+                     #SetNetwork,
+                     #VolumeOptions,
                      PostCreationStep)
 
     def format_status_message(self, message):

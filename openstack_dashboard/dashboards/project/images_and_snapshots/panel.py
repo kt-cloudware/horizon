@@ -25,6 +25,7 @@ from openstack_dashboard.dashboards.project import dashboard
 class ImagesAndSnapshots(horizon.Panel):
     name = _("Images & Snapshots")
     slug = 'images_and_snapshots'
+    permissions = ('openstack.roles.admin',)
 
 
 dashboard.Project.register(ImagesAndSnapshots)

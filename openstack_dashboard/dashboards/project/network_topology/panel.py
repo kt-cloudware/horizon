@@ -28,7 +28,8 @@ from openstack_dashboard.dashboards.project import dashboard
 class NetworkTopology(horizon.Panel):
     name = _("Network Topology")
     slug = 'network_topology'
-    permissions = ('openstack.services.network', )
+    #permissions = ('openstack.services.network', )
+    permissions = ('openstack.roles.admin',)
 
 
 dashboard.Project.register(NetworkTopology)
