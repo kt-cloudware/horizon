@@ -362,7 +362,7 @@ class SetInstanceDetailsAction(workflows.Action):
             #snapshots = api.nova.volume_snapshot_list(self.request)
             snapshots = api.cinder.volume_snapshot_list(self.request)
             snapshots = [s for s in snapshots
-                         if s.status == api.VOLUME_STATE_AVAILABLE]
+                         if s.status == api.cinder.VOLUME_STATE_AVAILABLE]
             volume_options.extend([self._get_volume_display_name(snap)
                                    for snap in snapshots])
         except:
