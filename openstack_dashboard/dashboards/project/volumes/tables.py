@@ -183,7 +183,8 @@ class VolumesTable(VolumesTableBase):
         status_columns = ["status"]
         row_class = UpdateRow
         table_actions = (CreateVolume, DeleteVolume,)
-        row_actions = (EditAttachments, CreateSnapshot, DeleteVolume)
+        #row_actions = (EditAttachments, CreateSnapshot, DeleteVolume)
+        row_actions = (EditAttachments, DeleteVolume)
 
 
 class DetachVolume(tables.BatchAction):

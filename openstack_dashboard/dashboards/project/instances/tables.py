@@ -471,7 +471,15 @@ class InstancesTable(tables.DataTable):
         status_columns = ["status", "task"]
         row_class = UpdateRow
         table_actions = (LaunchLink, TerminateInstance)
+        """
         row_actions = (ConfirmResize, RevertResize, CreateSnapshot,
+                       SimpleAssociateIP, AssociateIP,
+                       SimpleDisassociateIP, EditInstance,
+                       EditInstanceSecurityGroups, ConsoleLink, LogLink,
+                       TogglePause, ToggleSuspend, SoftRebootInstance,
+                       RebootInstance, TerminateInstance)
+        """
+        row_actions = (ConfirmResize, RevertResize, 
                        SimpleAssociateIP, AssociateIP,
                        SimpleDisassociateIP, EditInstance,
                        EditInstanceSecurityGroups, ConsoleLink, LogLink,
