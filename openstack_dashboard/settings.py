@@ -64,7 +64,7 @@ HORIZON_CONFIG = {
         'fade_duration': 1500,
         'types': ['alert-success', 'alert-info']
     },
-    'help_url': "http://docs.openstack.org",
+    'help_url': "https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_e0a2ee2b-ccad-471c-b4a1-23a71a5c97a9/manual/UI_Manual.pdf",
     'exceptions': {'recoverable': exceptions.RECOVERABLE,
                    'not_found': exceptions.NOT_FOUND,
                    'unauthorized': exceptions.UNAUTHORIZED},

@@ -20,6 +20,15 @@
     {% endif %}
     {% if next %}<input type="hidden" name="{{ redirect_field_name }}" value="{{ next }}" />{% endif %}
     {% include "horizon/common/_form_fields.html" %}
+    <div class="control-group form-filed clearfix">
+        <label>
+        * 신규 계정 요청은
+        <a href="mailto:js.ahn@kt.com">js.ahn@kt.com</a>
+        으로 연락 주시기 바랍니다.
+        <br><br>
+        <u><a href="https://ssproxy.ucloudbiz.olleh.com/v1/AUTH_e0a2ee2b-ccad-471c-b4a1-23a71a5c97a9/manual/UI_Manual.pdf" target="_blank">User Manual Download </a></u>
+        </label>
+
   </fieldset>
 {% endblock %}
 
