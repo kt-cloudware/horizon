@@ -129,6 +129,7 @@ horizon.network_topology = {
       var network_html = $("<div class='network' />").attr("id", network.id);
       var nicname_html = $("<div class='nicname'><h3>" + label +
         "</h3><span class='ip'>" + self.select_cidr(network.id) + "</span></div>");
+      network.url = undefined;
       if (network.url == undefined) {
         nicname_html.addClass("nourl");
       } else {
@@ -166,6 +167,13 @@ horizon.network_topology = {
       var main_port = self.select_main_port(ports);
       var parent_network = main_port.network_id;
       var device_html = $("<div class='" + type + "'></div>");
+      if(type == 'router'){
+      device_html
+        .attr('id', device.id)
+        .css({top: self.device_last_position, position: 'absolute'})
+        .append($("<span class='devicename'><i></i>" + type + "</span>"));
+      }
+      else{
       device_html
         .attr('id', device.id)
         .css({top: self.device_last_position, position: 'absolute'})
@@ -174,6 +182,7 @@ horizon.network_topology = {
           e.stopPropagation();
           window.location.href = device.url;
         });
+      }
       var name_html = $("<span class='name'></span>")
         .html(device.name)
         .attr('title', device.name)
@@ -233,6 +242,7 @@ horizon.network_topology = {
     var self = this;
     var port_html = $('<div class="port"><div class="dot"></div></div>');
     var ip_label = "";
+    port.url = undefined;
     $.each(port.fixed_ips, function(){
       ip_label += this.ip_address + " ";
     })
