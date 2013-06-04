@@ -24,8 +24,11 @@ class UserSettingsView(forms.ModalFormView):
     template_name = 'settings/user/settings.html'
 
     def get_initial(self):
+        #return {'language': self.request.LANGUAGE_CODE,
+        #        'timezone': self.request.session.get('django_timezone', 'UTC')}
+
         return {'language': self.request.LANGUAGE_CODE,
-                'timezone': self.request.session.get('django_timezone', 'UTC')}
+                'timezone': self.request.session.get('django_timezone', 'Asia/Seoul')}
 
     def form_valid(self, form):
         return form.handle(self.request, form.cleaned_data)

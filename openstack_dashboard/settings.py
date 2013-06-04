@@ -170,7 +170,8 @@ LANGUAGES = (
     ('zh-tw', gettext_noop('Traditional Chinese')),
 )
 LANGUAGE_CODE = 'en'
-USE_I18N = True
+#USE_I18N = True
+USE_I18N = False
 USE_L10N = True
 USE_TZ = True
 
