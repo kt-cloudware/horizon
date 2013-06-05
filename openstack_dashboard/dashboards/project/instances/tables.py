@@ -351,15 +351,19 @@ class SimpleDisassociateIP(tables.Action):
 
     def single(self, table, request, instance_id):
         try:
+            #fips = [fip for fip in api.network.tenant_floating_ip_list(request)
+            #        if fip.port_id == instance_id]
             fips = [fip for fip in api.network.tenant_floating_ip_list(request)
-                    if fip.port_id == instance_id]
+                    if fip.instance_id == instance_id]
             # Removing multiple floating IPs at once doesn't work, so this pops
             # off the first one.
             if fips:
                 fip = fips.pop()
+                #api.network.floating_ip_disassociate(request,
+                #                                     fip.id, instance_id)
                 api.network.floating_ip_disassociate(request,
-                                                     fip.id, instance_id)
-                api.network.tenant_floating_ip_release(request, fip.id)
+                                                     fip.id, fip.port_id)
+                #api.network.tenant_floating_ip_release(request, fip.id)
                 messages.success(request,
                                  _("Successfully disassociated "
                                    "floating IP: %s") % fip.ip)
@@ -482,6 +486,6 @@ class InstancesTable(tables.DataTable):
         row_actions = (ConfirmResize, RevertResize, 
                        SimpleAssociateIP, AssociateIP,
                        SimpleDisassociateIP, EditInstance,
-                       EditInstanceSecurityGroups, ConsoleLink, LogLink,
+                       ConsoleLink, LogLink,
                        TogglePause, ToggleSuspend, SoftRebootInstance,
                        RebootInstance, TerminateInstance)
