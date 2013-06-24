@@ -65,6 +65,9 @@ class CreateImage(tables.LinkAction):
     url = "horizon:project:images_and_snapshots:images:create"
     classes = ("ajax-modal", "btn-create")
 
+    def allowed(self):
+	return False
+
 
 class EditImage(tables.LinkAction):
     name = "edit"

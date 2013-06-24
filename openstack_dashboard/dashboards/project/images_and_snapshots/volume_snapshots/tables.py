@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 
 # Copyright 2012 Nebula, Inc.
@@ -86,7 +87,7 @@ class VolumeSnapshotsTable(volume_tables.VolumesTableBase):
 
     class Meta:
         name = "volume_snapshots"
-        verbose_name = _("Volume Snapshots")
+        verbose_name = _("Volume Snapshots (다음 릴리즈에 제공 예정)")
         table_actions = (DeleteVolumeSnapshot,)
         row_actions = (CreateVolumeFromSnapshot, DeleteVolumeSnapshot)
         row_class = UpdateRow

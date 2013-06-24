@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 
 # Copyright 2012 Nebula, Inc.
@@ -52,7 +53,7 @@ class DeleteSnapshot(DeleteImage):
 class SnapshotsTable(ImagesTable):
     class Meta(ImagesTable.Meta):
         name = "snapshots"
-        verbose_name = _("Instance Snapshots")
+        verbose_name = _("Instance Snapshots (다음 릴리즈에 제공 예정)")
         table_actions = (DeleteSnapshot,)
         row_actions = (LaunchSnapshot, EditImage, DeleteSnapshot)
         pagination_param = "snapshot_marker"
