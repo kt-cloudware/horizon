@@ -163,8 +163,9 @@ class UpdateInstance(workflows.Workflow):
     success_message = _('Modified instance "%s".')
     failure_message = _('Unable to modify instance "%s".')
     success_url = "horizon:project:instances:index"
-    default_steps = (UpdateInstanceInfo,
-                     UpdateInstanceSecurityGroups)
+    default_steps = (UpdateInstanceInfo,)
+    #default_steps = (UpdateInstanceInfo,
+    #                 UpdateInstanceSecurityGroups)
 
     def format_status_message(self, message):
         return message % self.context.get('name', 'unknown instance')
