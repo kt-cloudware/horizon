@@ -143,9 +143,10 @@ class CreateForm(forms.SelfHandlingForm):
                 source_type_choices.append(("image_source", _("Image")))
                 choices = [('', _("Choose an image"))]
                 for image in images:
-                    image.bytes = image.size
-                    image.size = bytes_to_gigabytes(image.bytes)
-                    choices.append((image.id, image))
+		    if image.name == 'Ubuntu 12.04 Server' or image.name == 'CentOS 6.4 Server':
+                        image.bytes = image.size
+                        image.size = bytes_to_gigabytes(image.bytes)
+                        choices.append((image.id, image))
                 self.fields['image_source'].choices = choices
             else:
                 del self.fields['image_source']
