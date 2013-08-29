@@ -97,7 +97,11 @@ class CreateVolumeFromImage(tables.LinkAction):
 
     def allowed(self, request, image=None):
         if image:
-            return image.status == "active"
+	    if (image.name.find('Ubuntu') != -1 and \
+                    image.name.find('Server2') == -1) or \
+                    image.name.find('cirros-0.3.1') != -1 or \
+                    image.name.find('CentOS') != -1 :
+                return image.status == "active"
         return False
 
 
