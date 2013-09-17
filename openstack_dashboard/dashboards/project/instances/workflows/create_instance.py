@@ -118,18 +118,28 @@ class VolumeOptionsAction(workflows.Action):
         else:
             vol_type = "vol"
             visible_label = _("Volume")
-        return (("%s:%s" % (volume.id, vol_type)),
-                ("%s - %s GB (%s)" % (volume.display_name,
-                                     volume.size,
-                                     visible_label)))
+
+	if volume.bootable == 'true':
+	    return (("%s:%s" % (volume.id, vol_type)),
+		("%s - %s GB (%s)" % (volume.display_name,
+				     volume.size,
+				     visible_label)))
+	else:
+	    return None
 
     def populate_volume_id_choices(self, request, context):
         volume_options = [("", _("Select Volume"))]
         try:
             volumes = [v for v in cinder.volume_list(self.request)
                        if v.status == api.cinder.VOLUME_STATE_AVAILABLE]
+	    """
             volume_options.extend([self._get_volume_display_name(vol)
                                    for vol in volumes])
+	    """
+	    for vol in volumes:
+	        display_name = self._get_volume_display_name(vol)
+		if display_name:
+		    volume_options.extend([display_name])
         except:
             exceptions.handle(self.request,
                               _('Unable to retrieve list of volumes.'))
