@@ -484,8 +484,7 @@ class InstancesTable(tables.DataTable):
                        RebootInstance, TerminateInstance)
         """
         row_actions = (ConfirmResize, RevertResize, 
-                       SimpleAssociateIP, AssociateIP,
-                       SimpleDisassociateIP, EditInstance,
+                       EditInstance,
                        ConsoleLink, LogLink,
                        TogglePause, ToggleSuspend, SoftRebootInstance,
                        RebootInstance, TerminateInstance)
