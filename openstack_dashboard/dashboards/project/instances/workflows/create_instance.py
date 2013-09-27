@@ -184,19 +184,21 @@ class VolumeOptions(workflows.Step):
 
 
 class SetInstanceDetailsAction(workflows.Action):
-    #SOURCE_TYPE_CHOICES = (
-    #    ("image_id", _("Image")),
-    #    ("instance_snapshot_id", _("Snapshot")),
-    #)
+    SOURCE_TYPE_CHOICES = (
+        ("image_id", _("Image")),
+        ("instance_snapshot_id", _("Snapshot")),
+    )
+    """
     SOURCE_TYPE_CHOICES = (
         ("image_id", _("Image")),
     )
+    """
 
     source_type = forms.ChoiceField(label=_("Instance Source"),
                                     choices=SOURCE_TYPE_CHOICES)
     image_id = forms.ChoiceField(label=_("Image"), required=False)
-    #instance_snapshot_id = forms.ChoiceField(label=_("Instance Snapshot"),
-    #                                         required=False)
+    instance_snapshot_id = forms.ChoiceField(label=_("Instance Snapshot"),
+                                             required=False)
     name = forms.CharField(max_length=80, label=_("Instance Name"))
     flavor = forms.ChoiceField(label=_("Flavor"),
                                help_text=_("Size of image to launch."))

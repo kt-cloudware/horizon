@@ -483,7 +483,7 @@ class InstancesTable(tables.DataTable):
                        TogglePause, ToggleSuspend, SoftRebootInstance,
                        RebootInstance, TerminateInstance)
         """
-        row_actions = (ConfirmResize, RevertResize, 
+        row_actions = (ConfirmResize, RevertResize, CreateSnapshot,
                        EditInstance,
                        ConsoleLink, LogLink,
                        TogglePause, ToggleSuspend, SoftRebootInstance,

@@ -53,7 +53,8 @@ class DeleteSnapshot(DeleteImage):
 class SnapshotsTable(ImagesTable):
     class Meta(ImagesTable.Meta):
         name = "snapshots"
-        verbose_name = _("Instance Snapshots (다음 릴리즈에 제공 예정)")
+        #verbose_name = _("Instance Snapshots (다음 릴리즈에 제공 예정)")
+        verbose_name = _("Instance Snapshots")
         table_actions = (DeleteSnapshot,)
         row_actions = (LaunchSnapshot, EditImage, DeleteSnapshot)
         pagination_param = "snapshot_marker"
