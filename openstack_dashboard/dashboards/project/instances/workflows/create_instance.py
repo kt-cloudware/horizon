@@ -119,7 +119,7 @@ class VolumeOptionsAction(workflows.Action):
             vol_type = "vol"
             visible_label = _("Volume")
 
-	if volume.bootable == 'true':
+	if volume.bootable or volume.bootable == 'true':
 	    return (("%s:%s" % (volume.id, vol_type)),
 		("%s - %s GB (%s)" % (volume.display_name,
 				     volume.size,
