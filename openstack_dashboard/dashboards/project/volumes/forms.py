@@ -143,10 +143,11 @@ class CreateForm(forms.SelfHandlingForm):
                 source_type_choices.append(("image_source", _("Image")))
                 choices = [('', _("Choose an image"))]
                 for image in images:
-                    if (image.name.find('Ubuntu') != -1 and \
-                            image.name.find('Server2') == -1) or \
-                            image.name.find('cirros-0.3.1') != -1 or \
-                            image.name.find('CentOS') != -1 :
+                    if (image.name.lower().find('ubuntu') != -1 and \
+                            image.name.lower().find('server2') == -1) or \
+                            image.name.lower().find('centos') != -1 or \
+                            image.name.lower().find('windows') != -1 or \
+                            image.name.lower().find('cirros-0.3.1') != -1 :
                         image.bytes = image.size
                         image.size = bytes_to_gigabytes(image.bytes)
                         choices.append((image.id, image))
